@@ -37,23 +37,17 @@ class FlightFromTheDark {
   }
   public static boolean getYesNoAnswer() {
 	  char answer = sc.next().charAt(0);
-	  boolean yesNo = true;
 	  boolean Error = false;
 	  do{
 		Error = false;
-		if(answer == 'y' || answer == 'Y') {
-            yesNo = true;
-			return yesNo;
-          }
-          else if(answer == 'n' || answer == 'N') {
-			  yesNo = false;
-			  return yesNo;
-		  }
+		if(answer == 'y' || answer == 'Y') return true;
+          else if(answer == 'n' || answer == 'N') return false;
           else {
             Error = true;
             System.out.println("Please enter Y or N");
           }
-        }while(Error == true);
+    }while(Error == true);
+    return false;
   }
   public static void characterRandom() {
     int Reroll = 2;
