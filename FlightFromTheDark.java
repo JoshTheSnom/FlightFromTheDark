@@ -1,16 +1,17 @@
 import java.util.*;
 import java.io.IOException;
 class FlightFromTheDark {
-  public static int Section = 0, CombatSkill = 0, Endurance = 0, Choose = 0, chapter = 1, maxEndurance = 0, maxCombatSkill = 0, Roll = 0,j = 1;
-  public static boolean Dead = false;
-  public static int NumDisciplines = 5;
-  public static String[] Disciplines = new String[NumDisciplines];
-  public static String[] Weapons = new String[2];
-  public static String[] Backpack = new String[4];
+  public static int combatSkill = 0, Endurance = 0, choose = 0, chapter = 1, maxEndurance = 0, maxCombatSkill = 0, roll = 0,j = 1;
+  public static boolean what = false;
+  public static int numDisciplines = 5;
+  public static String[] disciplines = new String[numDisciplines];
+  public static String[] weapons = new String[2];
+  public static String[] backpack = new String[4];
   public static int[][] crDamage = {{0,0,0,0,1,2,3,4,5,6,7,8,9},{0,0,0,1,2,3,4,5,6,7,8,9,10},{0,0,1,2,3,4,5,6,7,8,9,10,11},{0,1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12,14},{2,3,4,5,6,7,8,9,10,11,12,14,16},{3,4,5,6,7,8,9,10,11,12,14,16,18},{4,5,6,7,8,9,10,11,12,14,16,18,100},{5,6,7,8,9,10,11,12,14,16,18,100,100},{6,7,8,9,10,11,12,14,16,18,100,100,100}};
   public static int[][] lwDamage = {{100,100,8,6,6,5,5,5,4,4,4,3,3},{100,8,7,6,5,5,5,4,4,4,3,3,2},{8,7,6,5,5,5,4,4,4,3,3,2,2},{8,7,6,5,5,5,4,4,4,3,3,2,2},{7,6,5,5,5,4,4,4,3,3,2,2,1},{6,6,5,4,3,2,2,2,2,1,1,1,1},{5,5,4,3,2,2,1,1,1,0,0,0,0},{4,4,3,2,1,1,0,0,0,0,0,0,0},{3,3,2,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0}};
-  public static int Crowns = 0;
-  public static ArrayList<String> SpecialItems = new ArrayList<String>();
+  public static int crowns = 0;
+  public static Scanner sc = new Scanner (System.in);
+  public static ArrayList<String> specialItems = new ArrayList<String>();
   public static void main(String args[]) {
     
     introduction();
@@ -20,6 +21,7 @@ class FlightFromTheDark {
     characterCreation();
     do {
       game();
+	  System.out.println("--------------------------------------------------------------------------------");
     }while (Endurance<=0);
   }
   public static void introduction() {
@@ -33,29 +35,36 @@ class FlightFromTheDark {
 	catch (IOException e){ System.out.println("oof");}
     
   }
-  public static void characterRandom() {
-    int Reroll = 2;
-    boolean Error = false;
-    for(boolean i = false; i != true && Reroll > 0 ; ) {
-      Error = false;
-      i = false;
-      maxCombatSkill = (int)(Math.random() * 9) + 10;
-      maxEndurance = (int)(Math.random() * 9) + 20;
-      System.out.println("Your COMBAT SKILL is "+maxCombatSkill+" and your ENDURANCE is "+maxEndurance+".");
-      if(Reroll > 0) {
-        do{
-          System.out.print("\nWould you like to reroll? Y/N ");
-          Scanner sc = new Scanner (System.in);
-          char Answer = sc.next().charAt(0);
-          if(Answer == 'y' || Answer == 'Y') {
-            Reroll--;
+  public static boolean getYesNoAnswer() {
+	  char answer = sc.next().charAt(0);
+	  boolean yesNo = true;
+	  boolean Error = false;
+	  do{
+		Error = false;
+		if(answer == 'y' || answer == 'Y') {
+            yesNo = true;
+			return yesNo;
           }
-          else if(Answer == 'n' || Answer == 'N') i = true;
+          else if(answer == 'n' || answer == 'N') {
+			  yesNo = false;
+			  return yesNo;
+		  }
           else {
             Error = true;
             System.out.println("Please enter Y or N");
           }
         }while(Error == true);
+  }
+  public static void characterRandom() {
+    int Reroll = 2;
+    for(boolean i = false; i != true && Reroll > 0 ; i = false) {
+      maxCombatSkill = (int)(Math.random() * 9) + 10;
+      maxEndurance = (int)(Math.random() * 9) + 20;
+      System.out.println("Your COMBAT SKILL is "+maxCombatSkill+" and your ENDURANCE is "+maxEndurance+".");
+      if(Reroll > 0) {
+        System.out.print("\nWould you like to reroll? Y/N ");
+		what = getYesNoAnswer();
+        if(what) Reroll--;
       }
     }
   }
@@ -64,26 +73,26 @@ class FlightFromTheDark {
     for(int i = 4; i > -1; i--) {
       System.out.println("You can choose " + (i+1) + " more disciplines...\n");
       pickNumber(10);
-      switch (Choose) {
+      switch (choose) {
         case 1:
           System.out.println("You have picked the discipline Camouflage.");
-          Disciplines[i] = "Camouflage";
+          disciplines[i] = "Camouflage";
           break;
         case 2:
           System.out.println("You have picked the discipline Hunting.");
-          Disciplines[i] = "Hunting";
+          disciplines[i] = "Hunting";
           break;
         case 3:
           System.out.println("You have picked the discipline Sixth Sense.");
-          Disciplines[i] = "Sixth Sense";
+          disciplines[i] = "Sixth Sense";
           break;
         case 4:
           System.out.println("You have picked the discipline Tracking.");
-          Disciplines[i] = "Tracking";
+          disciplines[i] = "Tracking";
           break;
         case 5:
           System.out.println("You have picked the discipline Healing.");
-          Disciplines[i] = "Healing";
+          disciplines[i] = "Healing";
           break;
         case 6:
           int Weaponskill = 0;
@@ -122,39 +131,39 @@ class FlightFromTheDark {
               break;
           }
           System.out.println("You have picked the discipline Weaponskill. You are now proficicent with " + Weapon +".");
-          Disciplines[i] = "Weaponskill "+Weapon;
+          disciplines[i] = "Weaponskill "+Weapon;
           break;
         case 7:
           System.out.println("You have picked the discipline Mindshield.");
-          Disciplines[i] = "Mindshield";
+          disciplines[i] = "Mindshield";
           break;
         case 8:
           System.out.println("You have picked the discipline Mindblast.");
-          Disciplines[i] = "Mindblast";
+          disciplines[i] = "Mindblast";
           maxCombatSkill = maxCombatSkill+2;
           break;
         case 9:
           System.out.println("You have picked the discipline Animal Kinship.");
-          Disciplines[i] = "Animal Kinship";
+          disciplines[i] = "Animal Kinship";
           break;
         case 10:
           System.out.println("You have picked the discipline Mind Over Matter.");
-          Disciplines[i] = "Mind Over Matter";
+          disciplines[i] = "Mind Over Matter";
           break;
       }
     }
     System.out.println("\n\n\n\n\n");
   }
   public static void equipment() {
-    Weapons[0] = "Axe";
-    Backpack[0] = "Meal";
-    Crowns = (int)(Math.random() * 9) + 0;
-    System.out.print("\nYou are dressed in the green tunic and cloak of a Kai initiate. You have little\nwith you to arm yourself for survival.\n\nAll you possess is an Axe and a Backpack containing 1 Meal. Hanging from your\nwaist is a leather pouch containing " + Crowns + " Gold Crowns.\nYou also find ");
+    weapons[0] = "Axe";
+    backpack[0] = "Meal";
+    crowns = (int)(Math.random() * 9) + 0;
+    System.out.print("\nYou are dressed in the green tunic and cloak of a Kai initiate. You have little\nwith you to arm yourself for survival.\n\nAll you possess is an Axe and a Backpack containing 1 Meal. Hanging from your\nwaist is a leather pouch containing " + crowns + " Gold Crowns.\nYou also find ");
     int RandomItem = (int)(Math.random() * 9) + 0;
     switch(RandomItem) {
       case 1:
         System.out.print("a Sword.\n\n");
-        Weapons [1] = "Sword";
+        weapons[1] = "Sword";
         break;
       case 2:
         System.out.print("a Helmet (+2 to ENDURANCE).");
@@ -162,8 +171,8 @@ class FlightFromTheDark {
         break;
       case 3:
         System.out.print("two Meals.\n\n");
-        Backpack [1] = "Meal";
-        Backpack [2] = "Meal";
+        backpack[1] = "Meal";
+        backpack[2] = "Meal";
         break;
       case 4:
         System.out.print("Chainmail Waistcoat (+4 to ENDURANCE).\n\n");
@@ -171,68 +180,67 @@ class FlightFromTheDark {
         break;
       case 5:
         System.out.print("a Mace.");
-        Weapons[1] = "Mace";
+        weapons[1] = "Mace";
         break;
       case 6:
         System.out.print("a Healing Potion.\n\n");
-        SpecialItems.add("Healing Potion");
+        specialItems.add("Healing Potion");
         break;
       case 7:
         System.out.print("a Quarterstaff.\n\n");
-        Weapons [1] = "Quarterstaff";
+        weapons[1] = "Quarterstaff";
         break;
       case 8:
         System.out.print("a Spear.\n\n");
-        Weapons [1] = "Spear";
+        weapons[1] = "Spear";
         break;
       case 9:
-        System.out.print("12 more gold crowns.\n\n");
-        Crowns = Crowns + 12;
+        System.out.print("12 more gold Crowns.\n\n");
+        crowns = crowns + 12;
         break;
       case 0:
         System.out.print("a Broadsword.\n\n");
-        Weapons [1] = "Broadsword";
+        weapons[1] = "Broadsword";
         break;
     }
   }
   public static void pickNumber(int Options) {
-    int Numbers = Options;
     do{
-      System.out.println("Pick number between 1 and " + Numbers + ".");
-      Scanner sc = new Scanner (System.in);
-      Choose = sc.nextInt();
+      System.out.println("Pick number between 1 and " + Options + ".");
+      choose = sc.nextInt();
       
-    }while(Choose > Options || Choose < 1);
+    }while(choose > Options || choose < 1);
   }
   public static void game() {
     switch (chapter) {
       case 1:
-        System.out.println("You must make haste for you sense it is not safe to linger by the smoking\nremains of the ruined monastery. The black-winged beasts could return at any\nmoment. You must set out for the Sommlending capital of Holmgard and tell the\nKing the terrible news of the massacre: that the whole �lite of Kai warriors,\nsave yourself, have been slaughtered. Without the Kai Lords to lead her armies,\nSommerlund will be at the mercy of their ancient enemy, the Darklords.\n\nFighting back tears, you bid farewell to your dead kinsmen. Silently, you\npromise that their deaths will be avenged. You turn away from the ruins and\ncarefully descend the steep track.\n\nAt the foot of the hill, the path splits into two directions, both leading into\na large wood.\n");
+        System.out.println("You must make haste for you sense it is not safe to linger by the smoking\nremains of the ruined monastery. The black-winged beasts could return at any\nmoment. You must set out for the Sommlending capital of Holmgard and tell the\nKing the terrible news of the massacre: that the whole ?lite of Kai warriors,\nsave yourself, have been slaughtered. Without the Kai Lords to lead her armies,\nSommerlund will be at the mercy of their ancient enemy, the Darklords.\n\nFighting back tears, you bid farewell to your dead kinsmen. Silently, you\npromise that their deaths will be avenged. You turn away from the ruins and\ncarefully descend the steep track.\n\nAt the foot of the hill, the path splits into two directions, both leading into\na large wood.\n");
         System.out.println("If you wish to take the right path into the wood, type 1.");
         System.out.println("If you wish to follow the left track, type 2.");
         if(checkDiscipline("Sixth Sense"))System.out.println("If you wish to use your Kai Discipline of Sixth Sense, type 3.");
         if(checkDiscipline("Sixth Sense"))pickNumber(3);
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 85;
+		System.out.println(choose);
+        switch(choose) {
+          case 1: chapter = 85; break;
           case 2: chapter = 275;
-          case 3: chapter = 141;
+          case 3: chapter = 141; break;
         }
         break;
       case 2:
         System.out.println("As you dash through the thickening trees, the shouts of the Giaks begin to fade\nbehind you. You have nearly outdistanced them completely, when you crash\nheadlong into a tangle of low branches.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) chapter = 343;
-        else if(Roll >= 5) chapter = 276;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) chapter = 343;
+        else if(roll >= 5) chapter = 276;
         break;
       case 3:
         System.out.println("Staying close to the officer, you follow him through an arched portal and up a\nshort flight of stairs to a long hall. Soldiers run back and forth bearing\norders on ornate scrolls to officers stationed around the city wall.\n\nA haggard and scar-faced man dressed in the white and purple robes of the\nKing's court approaches you and bids you follow him to the citadel.\n");
         System.out.println("If you wish to follow this man, type 1.");
         System.out.println("If you wish to decline his offer and return to the crowded streets, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 196;
-          case 2: chapter = 144;
+        switch(choose) {
+          case 1: chapter = 196; break;
+          case 2: chapter = 144; break;
         }
         break;
       case 4:
@@ -242,40 +250,38 @@ class FlightFromTheDark {
         if(checkDiscipline("Sixth Sense"))System.out.println("If you wish to use your Kai Discipline of Sixth Sense, type 3.");
         if(checkDiscipline("Sixth Sense"))pickNumber(3);
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 75;
-          case 2: chapter = 175;
-          case 3: chapter = 218;
+        switch(choose) {
+          case 1: chapter = 75; break;
+          case 2: chapter = 175; break;
+          case 3: chapter = 218; break;
         }
         break;
       case 5:
         System.out.println("After about an hour of walking, the track slowly bears round to the east. You\nreach a shallow ford where a fast-flowing brook runs on a steep rocky course\ntowards the south. Just beyond the ford is a junction where the track meets a\nwider path running north to south. Realizing that the north path will take you\naway from the capital, you turn right at the junction and head south.\n");
-        chapter = 111;
-        break;
+        chapter = 111; break;
       case 6:
         System.out.println("In the distance you can hear the sound of horses galloping nearer. You crouch\nbehind a tree and wait as the riders come closer. They are the cavalry of the\nKing's Guard wearing the white uniforms of His Majesty's army.\n");
         System.out.println("If you wish to call them, type 1.");
         System.out.println("If you wish to let them pass and then continue on your way through the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 183;
-          case 2: chapter = 200;
+        switch(choose) {
+          case 1: chapter = 183; break;
+          case 2: chapter = 200; break;
         }
         break;
       case 7:
         System.out.println("For what seems an eternity, the rush of the crowd carries you along like a leaf\non a fast-flowing stream. You desperately fight to stay on your feet, but you\nfeel weak and dizzy from your ordeal, and your legs are as heavy as lead.\nSuddenly, you catch a glimpse of a long, narrow stone stairway that leads up to\nthe roof of an inn.\n\nGathering the last reserves of your strength, you dive for the stairs and climb\nslowly up to the top. From here you can see the magnificent view of the\nrooftops and spires of Holmgard, with the high stone walls of the citadel\ngleaming in the sun.\n\nThe houses and buildings of the capital are built very close to each other, and\nit is possible to jump from one roof to the next. In fact many of the citizens\nof Holmgard used to use the 'Roofways' (as they are known) when the heavy\nautumn rains made the unpaved parts of the streets too muddy for walking. But\nafter many accidents, a royal decree forbade their use.\n\nAfter careful thought, you decide to use the 'Roofways', as they are your only\nchance of reaching the King. You have hopped, skipped, and jumped across\nseveral streets and you are only one street away from the citadel when you come\nto the end of a row of rooftops.\n\nThe jump to the next row is much further than anything you have tried before,\nand your stomach begins to feel as if it were full of butterflies. Determined\nto reach the citadel, you turn and take a long run-up to the jump. With blood\npounding in your ears, you sprint to the edge of the roof and leap into space,\nyour eyes fixed on the opposite rooftop.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 2) chapter = 108;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 2) chapter = 108;
         else chapter = 25;
         break;
       case 8:
         System.out.println("Your Kai Sixth Sense warns there is a fierce battle raging in the south. Your\ncommon sense tells you that the south is also the quickest route to the\ncapital.\n");
-        chapter = 70;
-        break;
+        chapter = 70; break;
       case 9:
         System.out.println("You cannot move: you are being held rigid by some powerful force. Your eyes are drawn towards the mouth of the skeleton. From deep in the earth you hear a low humming, like the sound of millions of angry bees. A dull red glow appears in the empty eye sockets of the dead King and the humming increases until your ears are filled with the deafening roar. You are in the presence of an ancient evil, far older and stronger than the Darklords themselves.\n"); //From here on out, I will not use \n and will not edit files.
-        for(int i = 0; i < SpecialItems.size(); i++) {
-          if(SpecialItems.get(i) == "Vordak Gem") chapter = 236;
+        for(int i = 0; i < specialItems.size(); i++) {
+          if(specialItems.get(i) == "Vordak Gem") chapter = 236; break;
         }
         break;
       case 10:
@@ -283,36 +289,34 @@ class FlightFromTheDark {
         System.out.println("If you wish to enter a cottage and rest for a while, type 1.");
         System.out.println("If you wish to press on, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 115;
-          case 2: chapter = 83;
+        switch(choose) {
+          case 1: chapter = 115; break;
+          case 2: chapter = 83; break;
         }
         break;
       case 11:
         System.out.println("You quickly dodge into the doorway of a stable and hide your surgeon's cloak in the straw, for it would be better to be seen as a Kai Lord than as a charlatan.\n\nwithout wasting a second, you set off towards the Great Hall on the other side of the courtyard.\n");;
-        chapter = 139;
-        break;
+        chapter = 139; break;        
       case 12:
         System.out.println("The bodyguard looks at you with great suspicion and then slams the door shut. You can hear the sound of voices inside the caravan. Suddenly the door swings open and the face of a wealthy merchant appears.\n\nHe demands 10 Gold Crowns as payment for the ride.\n");
-        if(Crowns >= 10) {
+        if(crowns >= 10) {
           System.out.println("If you wish to pay him, type 1.");
           System.out.println("If you wish do not wish to pay him, type 2.");
           pickNumber(2);
-          switch(Choose) {
-            case 1: chapter = 262;
-            case 2: chapter = 247;
+          switch(choose) {
+            case 1: chapter = 262; break;
+            case 2: chapter = 247; break;
           }
         }
-        else chapter = 247;
-        break;
+        else chapter = 247; break;
       case 13:
         System.out.println("The path soon ends at a large clearing. In the centre of the clearing is a tree much taller and wider than any others you have seen in the forest.\n\nLooking up through the massive branches you can see a large treehouse some twenty-five to thirty feet above the ground. There is no ladder, but the gnarled bark of the tree offers many footholds.\n");
         System.out.println("If you wish to climb the tree and search the treehouse, type 1.");
         System.out.println("If you would rather press on, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 307;
-          case 2: chapter = 213;
+        switch(choose) {
+          case 1: chapter = 307; break;
+          case 2: chapter = 213; break;
         }
         break;
       case 14:
@@ -320,20 +324,19 @@ class FlightFromTheDark {
         System.out.println("If you wish to draw your weapon and prepare to fight, type 1.");
         System.out.println("If you would rather take evasive action by running as fast as you can over the hill, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 43;
-          case 2: chapter = 106;
+        switch(choose) {
+          case 1: chapter = 43; break;
+          case 2: chapter = 106; break;
         }
         break;
       case 15:
         System.out.println("You pass through a long, dark tunnel of overhanging branches that eventually opens out into a large clearing. On a stone plinth in the centre of the clearing is a Sword, sheathed in a black leather scabbard. A handwritten note has been tied to the hilt, but it is in a language which is foreign to you.\n");
-        if(Weapons[0] == null || Weapons[1] == null) {
+        if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the sword? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Sword";
-            else Weapons[1] = "Sword";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Sword";
+            else weapons[1] = "Sword";
           }
         }
         else System.out.println("You can't wield any more weapons.");
@@ -342,23 +345,22 @@ class FlightFromTheDark {
         System.out.println("If you decide to go west, type 2.");
         System.out.println("If you decide to go south, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 207;
-          case 2: chapter = 201;
-          case 3  : chapter = 35;
+        switch(choose) {
+          case 1: chapter = 207; break;
+          case 2: chapter = 201; break;
+          case 3  : chapter = 35; break;
         }
         break;
       case 16:
         System.out.println("You manage to free a horse from the straps securing it to the caravan. It is frightened by the scent of the approaching Doomwolves, and the cries of their evil riders-the Giaks.\n\nPreparing your weapon, you spur your skittish horse towards the oncoming beasts. They are less than fifty yards away and they are lowering their lances at you as they get nearer and nearer.\n");
-        chapter = 192;
-        break;
+        chapter = 192; break;
       case 17:
         System.out.println("You raise your weapon to strike at the beast as its razor-fanged mouth snaps shut just inches from your head. Buffeted by the beating of its wings you find it difficult to stand.\n");
         fight("Kraan",16,24,1,0,17);
         System.out.println("You quickly descend the far side of the hill to avoid the Giaks.");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll == 0) chapter = 53;
-        else if(Roll <= 2) chapter = 274;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll == 0) chapter = 53;
+        else if(roll <= 2) chapter = 274;
         else chapter = 316;
         break;
       case 18:
@@ -368,10 +370,10 @@ class FlightFromTheDark {
         if(checkDiscipline("Camouflage"))System.out.println("If you wish to use your Kai Discipline of Camouflage, type 3.");
         if(checkDiscipline("Camouflage"))pickNumber(3);
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 239;
-          case 2: chapter = 29;
-          case 3: chapter = 114;
+        switch(choose) {
+          case 1: chapter = 239; break;
+          case 2: chapter = 29; break;
+          case 3: chapter = 114; break;
         }
         break;
       case 19:
@@ -381,93 +383,89 @@ class FlightFromTheDark {
         if(checkDiscipline("Tracking"))System.out.println("If you wish to use your Kai Discipline of Tracking, type 3.");
         if(checkDiscipline("Tracking"))pickNumber(3);
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 69;
-          case 2: chapter = 272;
-          case 3: chapter = 119;
+        switch(choose) {
+          case 1: chapter = 69; break;
+          case 2: chapter = 272; break;
+          case 3: chapter = 119; break;
         }
         break;
       case 20:
         System.out.println("It seems that whoever lived here left in a great hurry-and they must have left quite recently. A half-eaten meal still remains on the table, and a mug of dark jala is still warm to the touch.\n\nSearching a chest and small wardrobe, you find a Backpack, food (enough for two Meals), and a Dagger.\n");
-        if(Backpack[0] == null || Backpack[1] == null || Backpack[2] == null|| Backpack[3] == null) {
+        if(backpack[0] == null || backpack[1] == null || backpack[2] == null|| backpack[3] == null) {
           System.out.println("Do you want to take the meal? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Backpack[0] == null) Backpack[0] = "Meal";
-            else if(Backpack[1] == null) Backpack[1] = "Meal";
-            else if(Backpack[2] == null) Backpack[2] = "Meal";
-            else Backpack[3] = "Meal";
+          what = getYesNoAnswer();
+          if(what) {
+            if(backpack[0] == null) backpack[0] = "Meal";
+            else if(backpack[1] == null) backpack[1] = "Meal";
+            else if(backpack[2] == null) backpack[2] = "Meal";
+            else backpack[3] = "Meal";
           }
         }
         else System.out.println("You can't wield any more items.");
-        if(Backpack[0] == null || Backpack[1] == null || Backpack[2] == null|| Backpack[3] == null) {
+        if(backpack[0] == null || backpack[1] == null || backpack[2] == null|| backpack[3] == null) {
           System.out.println("Do you want to take the meal? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Backpack[0] == null) Backpack[0] = "Meal";
-            else if(Backpack[1] == null) Backpack[1] = "Meal";
-            else if(Backpack[2] == null) Backpack[2] = "Meal";
-            else Backpack[3] = "Meal";
+          what = getYesNoAnswer();
+          if(what) {
+            if(backpack[0] == null) backpack[0] = "Meal";
+            else if(backpack[1] == null) backpack[1] = "Meal";
+            else if(backpack[2] == null) backpack[2] = "Meal";
+            else backpack[3] = "Meal";
           }
         }
         else System.out.println("You can't wield any more items.");
-        if(Weapons[0] == null || Weapons[1] == null) {
+        if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the dagger? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Dagger";
-            else Weapons[1] = "Dagger";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Dagger";
+            else weapons[1] = "Dagger";
           }
         }
         else System.out.println("You can't wield any more weapons.");
-        chapter = 273;
-        break;
+        chapter = 273; break;
+
       case 21:
         System.out.println("You have ridden about two miles into the tangle of trees when the ground becomes very marshy.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll < 5) {
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll < 5) {
           System.out.println("Your horse has suddenly plunged into thick mud up to its belly.");
-          Roll = (int)(Math.random() * 9) + 0;
-          if(Roll <= 7) {
+          roll = (int)(Math.random() * 9) + 0;
+          if(roll <= 7) {
             System.out.println("The mud engulfs you up to your armpits. Your horse gives one last despairing scream as its muzzle disappears into the bubbling mud.");
-            Roll = (int)(Math.random() * 9) + 0;
-            if(Roll != 9){
+            roll = (int)(Math.random() * 9) + 0;
+            if(roll != 9){
               System.out.println("The foul-smelling bog sucks you under and claims another victim. Your life and your mission end here.");
               ded();
             }
-            else chapter = 312;
+            else chapter = 312; break;
           }
           else {
             System.out.println("You drag yourself onto firm ground.");
-            chapter = 189;
+            chapter = 189; break;
           }
         }
         else {
           System.out.println("You manage to steer clear of the morass.");
-          chapter = 189;
+          chapter = 189; break;
         }
-        break;
       case 22:
         System.out.println("Knocking aside the leader, you sprint off along the highway. Then behind you the ominous click of a crossbow being cocked sends a shiver down your spine.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) chapter = 181;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) chapter = 181;
         else chapter = 145;
         break;
       case 23:
         System.out.println("The corridor soon widens into a large hall. At the far end, a stone staircase leads up to a huge door. Two black candles on either side of the stone steps dimly illuminate the chamber. You notice that no wax has melted, and as you get nearer you can feel that they give off no heat. Ancient engravings cover the stone surfaces of the walls.\n\nAnxious to leave this evil tomb, you examine the door for a latch. An ornate pin appears to lock the door, but there is also a keyhole in the lockplate.\n");
         System.out.println("If you wish to remove the pin, type 1.");
         if(checkDiscipline("Mind Over Matter")) System.out.println("If you wish to use your Kai Discipline of Mind Over Matter, type 2.");    
-        for(int i = 0; i < SpecialItems.size(); i++) {
-          if(SpecialItems.get(i) == "Golden Key") System.out.println("If you have a Golden Key and wish to use it, type 3.");
+        for(int i = 0; i < specialItems.size(); i++) {
+          if(specialItems.get(i) == "Golden Key") System.out.println("If you have a Golden Key and wish to use it, type 3.");
         }
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 337;
-          case 2: chapter = 326;
-          case 3: chapter = 337;
+        switch(choose) {
+          case 1: chapter = 337; break;
+          case 2: chapter = 326; break;
+          case 3: chapter = 337; break;
         }
         break;
       case 24:
@@ -475,23 +473,22 @@ class FlightFromTheDark {
         System.out.println("If you decide to jump after him, type 1.");
         System.out.println("If you decide to run through the caravan and grab the reins of the horse team, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 234;
-          case 2: chapter = 184;
+        switch(choose) {
+          case 1: chapter = 234; break;
+          case 2: chapter = 184; break;
         }
         break;
       case 25:
         System.out.println("You land with such a crash on the opposite roof, that the wind is knocked out of you and you lie flat on your back with your head in a spin.\n\nIt takes a minute or so for you to realize that you've made it and are perfectly safe. When you are sure you are all right, you jump up and let out a shout for joy at your skill and daring.\n\nQuickly you find a way across the roof and climb down a long drainpipe to the street below. You see the large iron doors of the citadel open, and a wagon drawn by two large horses tries to leave. The horses are frightened by the noisy crowd and they both rear up, causing the wagon to smash a front wheel against the door. In the confusion, you see a chance to enter and quickly slip inside just as the guards slam the doors shut.\n");
-        chapter = 139;
-        break;
+        chapter = 139; break;
       case 26:
         System.out.println("Cautiously, you move along the corridor until you come to a sharp eastward turn. A strange greenish light can be seen in the distance.\n");
         System.out.println("If you wish to continue, type 1.");
         System.out.println("If you wish to go back and try the southern route, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 249;
-          case 2: chapter = 100;
+        switch(choose) {
+          case 1: chapter = 249; break;
+          case 2: chapter = 100; break;
         }
         break;
       case 27:
@@ -499,9 +496,9 @@ class FlightFromTheDark {
         System.out.println("If you choose to attack, type 1.");
         System.out.println("If you choose to listen to what the voices say, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 250;
-          case 2: chapter = 52;
+        switch(choose) {
+          case 1: chapter = 250; break;
+          case 2: chapter = 52; break;
         }
         break;
       case 28:
@@ -509,62 +506,56 @@ class FlightFromTheDark {
         System.out.println("If you wish to go northwards, type 1.");
         System.out.println("If you wish to head south, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 130;
-          case 2: chapter = 147;
+        switch(choose) {
+          case 1: chapter = 130; break;
+          case 2: chapter = 147; break;
         }
         break;
       case 29:
         System.out.println("You stride out to the water's edge and prepare yourself for combat. The Kraan and its rider spot you and begin to speed across the lake barely inches above the surface.\n\nThe rider lets out a scream that freezes your blood. He is a Vordak, a fierce lieutenant of the Darklords.\n");
         if(checkDiscipline("Mindshield")) fight("Vordak",17,25,0,0,29);
         else fight("Vordak",17,25,2,0,29);
-        chapter = 270;
-        break;
+        chapter = 270; break;
       case 30:
         System.out.println("The people look tired and hungry. They have come many miles from their burning city. Suddenly, you hear the beat of huge wings coming from the north.\n\n'Kraan, Kraan! Hide yourselves!' the cry goes up all along the road.\n\nJust in front of you, a wagon carrying small children breaks down, its right wheel jammed in a furrow. The children scream in panic.\n");
         System.out.println("If you wish to help the children, type 1.");
         System.out.println("If you'd rather run for the cover of the trees, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 194;
-          case 2: chapter = 261;
+        switch(choose) {
+          case 1: chapter = 194; break;
+          case 2: chapter = 261; break;
         }
         break;
       case 31:
         System.out.println("You try to comfort the injured man as best you can, but his wounds are serious and he is soon unconscious again. Covering him with his cape, you turn and press deeper into the forest.\n");
-        chapter = 264;
-        break;
+        chapter = 264; break;
       case 32:
         System.out.println("You have ridden about three miles when, in the distance, you spot the unmistakable silhouette of five large Doomwolves. Riding on their backs are Giaks. They seem to be going on ahead to where the path leads down into an open meadow. Suddenly, one of the Giaks leaves the others and begins to ride back along the path towards you.\n");
         System.out.println("If you wish to hide in the undergrowth and let him pass, type 1.");
         System.out.println("If you wish to fight him, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 176;
-          case 2: chapter = 340;
+        switch(choose) {
+          case 1: chapter = 176; break;
+          case 2: chapter = 340; break;
         }
         break;
       case 33:
         System.out.println("The floor of the cave is quite dry and dusty. As you explore deeper in the half-light, you detect the stale odour of rotting flesh. Littering a crevice are the bones, fur, and teeth of several small animals. You notice a small cloth bag among these remains which you open to discover 3 Gold Crowns. Pocketing these coins, you leave what appears to be the lair of a mountain cat and carefully descend the hill.\n");
-        chapter = 248;
-        break;
+        chapter = 248; break;
       case 34:
         System.out.println("Without warning, a terrible apparition in red robes swoops down from the sky on the back of a Kraan. Its cry freezes your blood. The beast is a Vordak, a fierce lieutenant of the Darklords.\n\nHe is above you and you must fight him.\n");
         if(checkDiscipline("Mindshield")) fight("Vordak",17,25,0,0,34);
         else fight("Vordak",17,25,2,0,34);
-        chapter = 328;
-        break;
+        chapter = 328; break;
       case 35:
         System.out.println("The forest is becoming denser, and the path more tangled with thorny briars. Almost completely hidden by the undergrowth, you notice another path branching off towards the east. Your current route seems to be coming to a prickly end, so you decide to follow the new path eastwards.\n");
-        chapter = 207;
-        break;
+        chapter = 207; break;
       case 36:
         System.out.println("The old watchtower ladder is rotten and several rungs break as you climb.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) System.out.println("You have fallen.");
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) System.out.println("You have fallen.");
         else System.out.println("You do not fall.");
-        chapter = 323;
-        break;
+        chapter = 323; break;
       case 37:
         System.out.println("You are feeling tired and hungry and you must stop to eat. After your Meal, you retrace your steps back to the citadel and begin to walk around the high, indomitable stone wall.\n\nYou discover another entrance on the eastern side, guarded as before by two armoured soldiers.\n");
         System.out.println("If you wish to approach them and tell your story, type 1.");
@@ -573,9 +564,9 @@ class FlightFromTheDark {
           pickNumber(2);
         }
         else pickNumber(1);
-        switch(Choose) {
-          case 1: chapter = 289;
-          case 2: chapter = 282;
+        switch(choose) {
+          case 1: chapter = 289; break;
+          case 2: chapter = 282; break;
         }
         break;
       case 38:
@@ -583,27 +574,25 @@ class FlightFromTheDark {
         System.out.println("If you wish to investigate the smell of wood smoke, type 1.");
         System.out.println("If you would rather avoid the source of this smoke, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 128;
-          case 2: chapter = 347;
+        switch(choose) {
+          case 1: chapter = 128; break;
+          case 2: chapter = 347; break;
         }
         break;
       case 39:
         System.out.println("After a few seconds, two small furry faces nervously appear over the top of the trunk. They say they are Kakarmi and tell you that the Kraan are everywhere. To the west lie the remains of their village but little is left of it now. They are trying to find the rest of their tribe who took to the forest when the 'Black-wings' attacked. They point behind them-east along the path-and tell you that the trail appears to be a dead end, but that if you continue through the undergrowth for a few yards more, you will find a watchtower where the path splits into three directions. Take the east path. This leads to the King's highway between the capital city-Holmgard-and the northern port of Toran.\n\nYou thank the Kakarmi, and bid them farewell.\n");
-        chapter = 228;
-        break;
+        chapter = 228; break;
       case 40:
         System.out.println("Keeping a careful watch on the huts for any sign of the enemy, you make your way around the clearing under the cover of the trees and bracken. Rejoining the track, you hurry away from Fogwood.\n");
-        chapter = 105;
-        break;
+        chapter = 105; break;
       case 41:
         System.out.println("Three rangers gallop past the river bank, closely followed by the Giaks on their snarling Doomwolves.\n\nThe bank is steep and you are spotted by the Giak leader who orders five of his troops to open fire at you with their bows. Their black arrows rain down on you.\n");
         System.out.println("If you decide to paddle downstream as fast as you can, type 1.");
         System.out.println("If you decide to head for the cover of the trees on the opposite bank, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 174;
-          case 2: chapter = 116;
+        switch(choose) {
+          case 1: chapter = 174; break;
+          case 2: chapter = 116; break;
         }
         break;
       case 42:
@@ -613,11 +602,11 @@ class FlightFromTheDark {
         System.out.println("If you decide to venture south, type 3.");
         System.out.println("Or if you prefer to go west, type 4.");
         pickNumber(4);
-        switch(Choose) {
-          case 1: chapter = 86;
-          case 2: chapter = 238;
-          case 3: chapter = 157;
-          case 4: chapter = 147;
+        switch(choose) {
+          case 1: chapter = 86; break;
+          case 2: chapter = 238; break;
+          case 3: chapter = 157; break;
+          case 4: chapter = 147; break;
         }
         break;
       case 43:
@@ -627,27 +616,26 @@ class FlightFromTheDark {
         break;
       case 44:
         System.out.println("Without warning, the old track ends abruptly at the edge of a steep slope. The ground here is very loose and unstable. You lose your footing and fall headlong over the edge.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) chapter = 277;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) chapter = 277;
         else chapter = 338;
         break;
       case 45:
         System.out.println("These men are not what they seem. The tunic of the leader is genuine but it is heavily bloodstained around the collar, as if its true owner had been murdered. Their weapons are not army issue, but expensive and lavishly decorated like the weapons made by the armourers of Durenor.\n\nThe leader has a crossbow slung over his pack. An attempt to run would be suicide. You decide that you must fight them or you will surely be murdered as soon as you drop your weapon.\n");
-        chapter = 180;
-        break;
+        chapter = 180; break;
       case 46:
         System.out.println("You have covered about two miles when the trees ahead thin out. You can see a small wooden shack on the edge of a lake. A cloaked man approaches you and offers to row you and your horse across the lake for a fee of 2 Gold \n");
         System.out.println("If you refuse and try to ride around the lake, type 1.");
-        if(Crowns >= 2){
+        if(crowns >= 2){
           System.out.println("If you accept the offer, type 2.");
-          Crowns = Crowns-2;
+          crowns = crowns-2; break;
         }
         if(checkDiscipline("Sixth Sense")) System.out.println("If you wish to use your Kai Discipline of Sixth Sense, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 90;
-          case 2: chapter = 246;
-        	case 3: chapter = 296;
+        switch(choose) {
+          case 1: chapter = 90; break;
+          case 2: chapter = 246; break;
+        	case 3: chapter = 296; break;
         }
         break;
       case 47:
@@ -655,19 +643,18 @@ class FlightFromTheDark {
         System.out.println("If you wish to stand and fight the Giaks where you are, using the high ground to your advantage, type 1.");
         System.out.println("If you grit your teeth and press on towards the peak of the hill, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 136;
-          case 2: chapter = 322;
+        switch(choose) {
+          case 1: chapter = 136; break;
+          case 2: chapter = 322; break;
         }
         break;
       case 48:
         System.out.println("Your Sixth Sense warns you that these troops are not all they seem. You can detect an aura of evil about them. They are in the service of the Darklords.\n\nYou must leave here quickly before you are spotted.\n");
-        chapter = 243;
-        break;
+        chapter = 243; break;
       case 49:
         System.out.println("As you begin to read the inscription, you notice a shadow moving towards you from behind the screen.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) chapter = 339;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) chapter = 339;
         else chapter = 60;
         break;
       case 50:
@@ -675,9 +662,9 @@ class FlightFromTheDark {
         System.out.println("If you wish to continue towards the sound of battle, type 1.");
         System.out.println("If you wish to avoid the fighting and change direction, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 97;
-          case 2: chapter = 243;
+        switch(choose) {
+          case 1: chapter = 97; break;
+          case 2: chapter = 243; break;
         }
         break;
       case 51:
@@ -685,9 +672,9 @@ class FlightFromTheDark {
         System.out.println("There is a gate in the log wall. If you wish to approach it, type 1.");
         System.out.println("If you would prefer to climb over the wall instead, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 288;
-          case 2: chapter = 221;
+        switch(choose) {
+          case 1: chapter = 288; break;
+          case 2: chapter = 221; break;
         }
         break;
       case 52:
@@ -695,7 +682,7 @@ class FlightFromTheDark {
         if(checkDiscipline("Animal Kinship")) chapter = 255;
         else {
           System.out.println("You must climb over the tree and face whatever lurks on the other side");
-          chapter = 250;
+          chapter = 250; break;
         }
         break;
       case 53:
@@ -709,22 +696,20 @@ class FlightFromTheDark {
       case 55:
         System.out.println("Just as the Giak makes his leap, you race forward and strike out with your weapon-knocking the creature away from the young wizard's back.\nYou jump onto the struggling Giak and strike again. Due to the surprise of your attack, add 4 points to your COMBAT SKILL for the duration of this fight but remember to deduct it again as soon as the fight is over.\n");
         fight("Giak",9,9,0,0,55);
-        chapter = 325;
-        break;
+        chapter = 325; break;
       case 56:
         System.out.println("You hear the scream of a large winged beast above the trees. It is a Kraan, a deadly servant of the Darklords. Quickly you hide beneath the thick fronds of fern until the horrible shrieks have passed away.\n");
-        chapter = 222;
-        break;
+        chapter = 222; break;
       case 57:
         System.out.println("The cabin has only one room. In it you see a wooden table and two benches, a large bed made of straw bales lashed together, several bottles of coloured liquids, and an embroidered rug in the centre of the floor.\n");
         System.out.println("If you choose to take a closer look at the bottles, type 1.");
         System.out.println("If you choose to pull back the rug, type 2.");
         System.out.println("If you choose to leave the room and investigate the stable, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 164;
-          case 2: chapter = 109;
-          case 3: chapter = 308;
+        switch(choose) {
+          case 1: chapter = 164; break;
+          case 2: chapter = 109; break;
+          case 3: chapter = 308; break;
         }
         break;
       case 58:
@@ -732,9 +717,9 @@ class FlightFromTheDark {
         System.out.println("If you decide to flatten yourself against the rocks along the side of the road and wait until they pass, type 1.");
         System.out.println("If you decide to carry on running, but draw your weapon just in case they attack, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 251;
-          case 2: chapter = 160;
+        switch(choose) {
+          case 1: chapter = 251; break;
+          case 2: chapter = 160; break;
         }
         break;
       case 59:
@@ -743,10 +728,10 @@ class FlightFromTheDark {
         System.out.println("If you wish to return to the surface and press on, type 2.");
         System.out.println("If you wish to investigate the tunnel further, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 124;
-          case 2: chapter = 106;
-          case 3: chapter = 211;
+        switch(choose) {
+          case 1: chapter = 124; break;
+          case 2: chapter = 106; break;
+          case 3: chapter = 211; break;
         }
         break;
       case 60:
@@ -755,53 +740,46 @@ class FlightFromTheDark {
         break;
       case 61:
         System.out.println("At last you can reach the wooden fieldworks surrounding the outer city. As you race towards a sentry post, you can hear the excited shouts of the guards cheering you on. Thank the gods that they recognize you, for you must appear a ragged and suspicious figure. Your cloak is torn and hangs in tatters, your face is scratched and blood-smeared, and the dust of the Graveyard covers you from head to toe.\n\nSplashing through a shallow stream, you stagger towards the gate. The full horror of the Graveyard encounter begins to catch up with you. The last thing you recall before exhaustion robs you of consciousness, is falling into the outstretched arms of two soldiers who have run from the fieldworks to help you.\n");
-        chapter = 268;
-        break;
+        chapter = 268; break;
       case 62:
         System.out.println("The 'soldiers' lie dead at your feet. They were bandits who were stealing from the refugees of Toran, and from the abandoned houses and farms in the area.\n\nSearching their bodies you find 28 Gold Crowns and two Backpacks containing enough food for 3 Meals. They had been armed with a crossbow and three Swords. The crossbow has been damaged in the fight, but the Swords are untouched and you may keep one if you wish.\n\nYou adjust your equipment, give a cautious glance towards the west, and continue your run towards the outer defences of the capital.\n");
-        chapter = 288;
-        break;
+        chapter = 288; break;
       case 63:
         System.out.println("The wild old man is screaming at you. He blames you for the war and curses the Kai Lords as agents of the Darklords. He will not listen to reason and you must fight him.\n");
         fight("Madman",11,10,0,0,63);
-        chapter = 269;
-        break;
+        chapter = 269; break;
       case 64:
         System.out.println("You are awoken by the cries of a Kraan circling above the caravan. It is early morning and the sky is clear and bright. You can see a pack of Doomwolves less than a quarter of a mile away along the highway ahead. They are preparing to attack. You must act quickly.\n");
         System.out.println("If you decide to gather your equipment and run for the cover of the trees, type 1.");
         System.out.println("If you decide to cut free one of the horses and try to break through the attacking Doomwolves to the clear road beyond, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 188;
-          case 2: chapter = 16;
+        switch(choose) {
+          case 1: chapter = 188; break;
+          case 2: chapter = 16; break;
         }
         break;
       case 65:
         System.out.println("Your senses scream at you that this place is very evil. Leave as quickly as you can.\n");
-        chapter = 104;
-        break;
+        chapter = 104; break;
       case 66:
         System.out.println("Startled, you turn around to see a burly sergeant and two soldiers running towards you, their swords drawn as if to strike.\n\nYou prepare to defend yourself for it looks as if they are about to attack first and ask questions later; but suddenly the sergeant calls his men to a halt. He has recognized your cloak. They put away their weapons and apologize many times for their mistake. The sergeant orders one of the men to fetch the captain of the Guard as he leads you to the doors of the Great Hall.\n\nYou are greeted by a tall and handsome warrior who listens intently to your story. When you have finished the account of your perilous journey to the capital, you notice a tear in the brave man's eye as he bids you to follow him. You walk through the splendid halls and corridors of the inner Palace. The richness and grandeur are a wonder to behold. You eventually arrive at a large carved door, guarded by two soldiers wearing silver armour.\n\nYou are about to meet the King.\n");
-        chapter = 350;
-        break;
+        chapter = 350; break;
       case 67:
         System.out.println("Your Kai Discipline of Tracking reveals to you fresh paw prints leading off along the south path.\n\nThey are the prints of a black bear, an animal renowned for its ferocity. You decide the east path would be a much safer route.\n");
-        chapter = 252;
-        break;
+        chapter = 252; break;
       case 68:
         System.out.println("After a short walk, you reach a junction where a path crosses your present route heading from west to east.\n");
         System.out.println("If you wish to turn west, type 1.");
         System.out.println("If you wish to head east, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 130;
-          case 2: chapter = 15;
+        switch(choose) {
+          case 1: chapter = 130; break;
+          case 2: chapter = 15; break;
         }
         break;
       case 69:
         System.out.println("You are very near a friendly village.\n\nAvoid the gallowbrush.\n");
-        chapter = 272;
-        break;
+        chapter = 272; break;
       case 70:
         System.out.println("You have reached a small bridge. A track follows the stream towards the east. A much narrower path disappears into thick forest towards the south.\n");
         System.out.println("If you wish to go east, type 1.");
@@ -811,10 +789,10 @@ class FlightFromTheDark {
           pickNumber(3);
         }
     		else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 28;
-          case 2: chapter = 157;
-          case 3: chapter = 8;
+        switch(choose) {
+          case 1: chapter = 28; break;
+          case 2: chapter = 157; break;
+          case 3: chapter = 8; break;
         }
         break;
       case 71:
@@ -826,29 +804,27 @@ class FlightFromTheDark {
           pickNumber(3);
         }
     		else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 242;
-          case 2: chapter = 104;
-          case 3: chapter = 65;
+        switch(choose) {
+          case 1: chapter = 242; break;
+          case 2: chapter = 104; break;
+          case 3: chapter = 65; break;
         }
         break;
       case 72:
 				System.out.println("You turn to face a sneering Giak and the razor-fanged jaws of its mount. You must fight them as one enemy.");
         fight("Giak + Doomwolf",15,24,0,0,72);
-    		chapter = 265;
-        break;
+    		chapter = 265; break;
       case 73:
         System.out.println("Pulling your green cloak about you, you blend into the foliage and rocks. Peering carefully up at the track, you are shocked to see that they are not the King's men at all.\n\nThey are Drakkarim, some of the Darklords' cruellest troops. They must have disguised themselves as soldiers of the King in order to get this far into the forest. Thanking your Kai training for saving your life, you silently slip away from the stream and push on into the forest.\n");
-        chapter = 243;
-        break;
+        chapter = 243; break;
       case 74:
         System.out.println("The Kraan and its riders land on the track barely ten feet from where you are hidden.\n\nThe Giaks leap from the scaly backs of the Kraan and move towards you, their spears raised to strike. You have been seen.\n");
         System.out.println("If you decide to fight them, type 1.");
         System.out.println("If you decide to run deeper into the forest without delay, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 138;
-          case 2: chapter = 281;
+        switch(choose) {
+          case 1: chapter = 138; break;
+          case 2: chapter = 281; break;
         }
         break;
       case 75:
@@ -856,54 +832,49 @@ class FlightFromTheDark {
         System.out.println("If you wish to help the ranger, type 1.");
         System.out.println("If you wish to stay hidden and drift downstream, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 260;
-          case 2: chapter = 163;
+        switch(choose) {
+          case 1: chapter = 260; break;
+          case 2: chapter = 163; break;
         }
         break;
     case 76:
         System.out.println("The Gem feels very hot and burns your hand. You quickly grab it with the edge of your cloak and slip this Vordak Gem into your Backpack. A Gem that size must be worth hundreds of Crowns! You smile at your good fortune, mount your horse, and ride off along the south track.\n");
         Endurance = Endurance - 2;
-    		chapter = 118;
-        break;
+    		chapter = 118; break;
     case 77:
         System.out.println("The Mountain Giaks are unaccustomed to pursuing their prey through forests and you soon outdistance them, until finally the sound of their grunts and curses disappears completely.	\n\nWhen you are satisfied that they have given up the chase, you stop for a few minutes to catch your breath and check your equipment. With the memory of your ruined monastery still blazing in your mind, you gather up your meagre belongings and push on.\n");
-        chapter = 19;
-        break;
+        chapter = 19; break;
     case 78:
         System.out.println("As the caravan careers past, you leap for the tailboard and manage to hold fast. Pulling yourself upright, you find that you are standing on the bottom rung of a ladder leading to the rear door of the wagon. Suddenly the top half of the door flies open and you are confronted by the angry face of a bodyguard.\n");
         System.out.println("If you decide to inform him that you are a Kai Lord with an urgent message for the King, type 1.");
         System.out.println("If you decide to offer him Gold Crowns for safe passage to the capital, type 2.");
     		System.out.println("If you decide to attack the guard with your weapon, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 132;
-          case 2: chapter = 12;
-          case 3: chapter = 220;
+        switch(choose) {
+          case 1: chapter = 132; break;
+          case 2: chapter = 12; break;
+          case 3: chapter = 220; break;
         }
         break;
     case 79:
         System.out.println("You come to a small footbridge across a fast-flowing stream. On the other side of the bridge the path turns south. You cross the bridge and follow the path.\n");
-        chapter = 204;
-        break;
+        chapter = 204; break;
     case 80:
         System.out.println("You stumble backwards through the front door, clutching your burnt chest with both hands. Smoke is billowing from the shop and you must run-before the Sage or his robber son catch you.\n\nYou make it back to the main street and lose yourself in the rush of the crowds.\n");
-        chapter = 7;
-        break;
+        chapter = 7; break;
     case 81:
         System.out.println("After nearly an hour, the Kraan and their cruel riders vanish towards the west. As the shocked refugees start to emerge from the woods, you can hear the sound of horses in the distance galloping nearer. You stay hidden and wait as the riders come closer. They are the cavalry of the King's Guard wearing the white uniforms of His Majesty's army.\n");
         System.out.println("If you wish to call to them, type 1.");
         System.out.println("If you would rather continue along the forest edge towards the south, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 183;
-          case 2: chapter = 200;
+        switch(choose) {
+          case 1: chapter = 183; break;
+          case 2: chapter = 200; break;
         }
         break;
     case 82:
         System.out.println("The giant Gourgaz lies dead at your feet. His evil followers hiss at you and then fall back from the bridge. The Prince's soldiers form a protective wall around you and their dying leader with their shields. Black arrows whistle past your head.\n\nThe dying Prince looks up into your eyes and says, 'Kai Lord, you must take a message to my father. The enemy is too strong, we cannot hold him. The King must seek that which is in Durenor or all is lost. Take my horse and ride for the capital. May the luck of the gods ride with you.'\n\nYou bid a sad farewell to the Prince, mount his white steed, and head south along the forest path. The battle still rages behind you as the Prince's men fight off another assault on the bridge.\n");
-        chapter = 235;
-        break;
+        chapter = 235; break;
     case 83:
         System.out.println("You have run about a mile when three soldiers appear from beneath a small footbridge. They demand that you halt and drop your weapons and equipment.\n\nThey are bloodstained and unshaven. Their leader is wearing the tunic of a soldier of the Toran garrison.\n");
         System.out.println("If you wish to do as they say, type 1.");
@@ -914,25 +885,24 @@ class FlightFromTheDark {
           pickNumber(4);
         }
     		else pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 205;
-          case 2: chapter = 180;
-          case 3: chapter = 232;
-          case 4: chapter = 45;
+        switch(choose) {
+          case 1: chapter = 205; break;
+          case 2: chapter = 180; break;
+          case 3: chapter = 232; break;
+          case 4: chapter = 45; break;
         }
         break;
     case 84:
         System.out.println("Just as you feel the air beating on your back, you slip free of your horse and roll over-landing with a splash in a muddy ditch by the side of the highway.\n\nYou are uninjured, and you quickly scramble to your feet and make a dash for the cover of the trees-but with thirty yards left to run, you see the Kraan circling above for another dive.\n");
-        chapter = 188;
-        break;
+        chapter = 188; break;
     case 85:
         System.out.println("The path is wide and leads straight into thick undergrowth. The trees are tall here and unusually quiet. You walk for over a mile when suddenly you hear the beating of large wings directly above you. Looking up, you are shocked to see the sinister black outline of a Kraan diving to attack you.\n");
         System.out.println("If you draw your weapon and prepare to fight, type 1.");
         System.out.println("If you evade the attack by running south, deeper into the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 229;
-          case 2: chapter = 99;
+        switch(choose) {
+          case 1: chapter = 229; break;
+          case 2: chapter = 99; break;
         }
         break;
     case 86:
@@ -942,41 +912,38 @@ class FlightFromTheDark {
     		System.out.println("If you prefer to go south, type 3.");
    			System.out.println("Or if you wish to turn west, type 4.");
         pickNumber(4);
-        switch(Choose) {
-          case 1: chapter = 6;
-          case 2: chapter = 35;
-          case 3: chapter = 167;
-          case 4: chapter = 42;
+        switch(choose) {
+          case 1: chapter = 6; break;
+          case 2: chapter = 35; break;
+          case 3: chapter = 167; break;
+          case 4: chapter = 42; break;
         }
         break;
     case 87:
         System.out.println("Focusing your powers on the lock, you try to visualize the inner mechanism. Gradually its image appears in your mind's eye. It is old and corroded but it still functions. You are in danger of losing your concentration when a subtle click confirms that your effort has not been in vain.\n\nThe pin is an easier task. Slowly it rises out of the lock and falls to the floor. The granite door swings towards you on hidden hinges and the grey half-light of the Graveyard floods into the tomb. The exit is overgrown with graveweed and you suffer many small cuts to your face and hands as you fight your way through to the surface. You are startled by a sudden noise. You turn to see the disembodied head of a corpse laughing at you.\n\nIn blind panic, you race through the eerie necropolis towards the southern gate.\n");
-        chapter = 61;
-        break;
+        chapter = 61; break;
     case 88:
         System.out.println("You cautiously peer around the rock to see a soldier lying on his back. By his side is a Spear and shield. On the shield is the painting of a white pegasus-the Prince of Sommerlund's emblem. He is one of the Prince's soldiers, and he is only just conscious. His uniform is badly torn, and you can see that he has a deep wound in his left arm. As you move nearer, his eyes flicker open. 'Heal me, my lord,' he begs. 'I can barely feel my arm.'\n");
     		if(checkDiscipline("Healing")){
           System.out.println("If you wish to use the Kai Discipline of Healing on this man, type 1.");
           System.out.println("If you do not want to use it, type 2.");
           pickNumber(2);
-          switch(Choose) {
-            case 1: chapter = 216;
-            case 2: chapter = 31;
+          switch(choose) {
+            case 1: chapter = 216; break;
+            case 2: chapter = 31; break;
         	}
         }    
-    		else chapter = 31;
-        break;
+    		else chapter = 31; break;
     case 89:
         System.out.println("In a cloud of dust and loose rocks you career down the steep hillside. The Kraan is still circling above as if waiting to direct the Giaks after you.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 1) chapter = 53;
-        else if(Roll <= 4) chapter = 274;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 1) chapter = 53;
+        else if(roll <= 4) chapter = 274;
     		else chapter = 316;
         break;
     case 90:
         System.out.println("Night falls and you are soon engulfed in total darkness. To press on would be useless, for you would be sure to lose your way. Tethering your horse to a tree, you pull your green Kai cloak about you and fall into a restless sleep.\n");
-        chapter = 18;
-        break;
+        chapter = 18; break;
     case 91:
         System.out.println("The small shop is dark and musty. Books and bottles of every size and colour fill the many shelves. As you close the door, a small black dog begins to yap at you. A bald man appears from behind a large screen and bids you welcome. He politely enquires as to the nature of your visit and offers you a choice of his wares from the glass counter.\n");
         System.out.println("If you wish to look at his wares, type 1.");
@@ -986,33 +953,30 @@ class FlightFromTheDark {
           pickNumber(3);
         }
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 152;
-          case 2: chapter = 7;
-          case 3: chapter = 198;
+        switch(choose) {
+          case 1: chapter = 152; break;
+          case 2: chapter = 7; break;
+          case 3: chapter = 198; break;
         }
         break;
     case 92:
         System.out.println("You dive for cover not a moment too soon, for a hail of black arrows scream out of the woods and bombard the area where you were standing seconds before. Pulling your cloak around you to blend into the dense bracken, you dash through the forest and away from the hidden ambushers as fast as possible. This entire area is infested by Giaks and you must escape as quickly as you can. You run without rest for over an hour until you happen to fall upon a straight forest path heading towards the east. You follow the path, taking care to keep watch for signs of the enemy.\n");
-        chapter = 13;
-        break;
+        chapter = 13; break;
     case 93:
         System.out.println("You turn and run for the stairs just as a large block falls with a crash behind you. The room you were in has been completely sealed off. As you escape into the daylight, you glimpse behind you the crooked figure of an old druid as he raises his staff. A second later, a bolt of lightning explodes at your feet. You do not stop but run headlong down the hill, cursing the delay but thankful for your Sixth Sense.\n");
-        chapter = 106;
-        break;
+        chapter = 106; break;
     case 94:
         System.out.println("The Sage, seeing that you have killed his son, turns and runs from the shop by a back door.\n\nYou find 12 Gold Crowns in the robber's purse and another 4 Gold Crowns in a wooden box under the counter. Carefully examining the potions and the wand you soon realize that they are all cheap counterfeits. In fact the entire shop is full of imitations. You shake your head and return to the main street.\n");
-        Crowns = Crowns + 16;
-    		chapter = 7;
-        break;
+        crowns = crowns + 16;
+    		chapter = 7; break;
     case 95:
         System.out.println("You soon stumble upon a narrow forest track running from north to south.\n");
         System.out.println("If you wish to set off along the track towards the north, type 1.");
         System.out.println("If you wish to go south instead, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 240;
-          case 2: chapter = 5;
+        switch(choose) {
+          case 1: chapter = 240; break;
+          case 2: chapter = 5; break;
         }
         break;
     case 96:
@@ -1020,9 +984,9 @@ class FlightFromTheDark {
         System.out.println("If you wish to explore the cave further, type 1.");
         System.out.println("If you wish to leave the cave and descend the hill in case the Giaks return, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 33;
-          case 2: chapter = 248;
+        switch(choose) {
+          case 1: chapter = 33; break;
+          case 2: chapter = 248; break;
         }
         break;
     case 97:
@@ -1030,29 +994,27 @@ class FlightFromTheDark {
         System.out.println("If you wish to defend the fallen Prince, type 1.");
         System.out.println("If you wish to run into the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 255;
-          case 2: chapter = 306;
+        switch(choose) {
+          case 1: chapter = 255; break;
+          case 2: chapter = 306; break;
         }
         break;
     case 98:
         System.out.println("The guards seem to believe your story and bow with respect to your rank of Kai Lord. One of them pulls a concealed bell-rope and the huge doors start to swing open. They usher you inside and you hear the doors close behind you.\n");
-        chapter = 139;
-        break;
+        chapter = 139; break;
     case 99:
         System.out.println("You dive into the undergrowth just as the beast screams past your head. You quickly look back to see the Kraan turning in the air in preparation for another dive. You scramble to your feet and run deeper into the safety of the forest.\n");
-        chapter = 222;
-        break;
+        chapter = 222; break;
     case 100:
         System.out.println("The cold corridor suddenly makes an abrupt turning towards the east. You notice a greenish glow that lights the tunnel in the far distance. As you creep nearer you can see that the corridor opens out into a larger chamber.\n\nThe strange light seems to emanate from a large bowl resting upon the top of a granite throne. On a plinth in front of the throne stands a statue. It looks like a winged serpent curved in the shape of an 'S'.\n");
         System.out.println("If you wish to sit on the throne, type 1.");
         System.out.println("If you wish to examine the statue, type 2.");
     		System.out.println("If you wish to look for an exit from this chamber, type 3.");
         pickNumber(3);
-        switch(Choose) {
-          case 1: chapter = 161;
-          case 2: chapter = 133;
-          case 3: chapter = 257;
+        switch(choose) {
+          case 1: chapter = 161; break;
+          case 2: chapter = 133; break;
+          case 3: chapter = 257; break;
         }
         break;
         
@@ -1060,12 +1022,73 @@ class FlightFromTheDark {
         
   	case 101:
         System.out.println("The noise of battle soon fades behind you but the ensuing silence is broken by a voice in your head that accuses you of being a coward, and deserting a fellow human in danger. You try to rid yourself of your nagging conscience by telling yourself that your mission is far more important, and that not only is the life of the young magician in peril but the lives of all your countrymen depend on you reaching the capital alive.\n\nSuddenly, the sight of a Giak war party in the distance makes you quickly take cover and hide. But it is too late-they have spotted you and you must run as fast as you can.\n");
-        chapter = 281;
+        chapter = 281; break;
+	case 102:
+        System.out.println("As you descend the rocky slope towards the Graveyard of the Ancients, you are aware of a strange mist and cloud that swirls all around this grey and forbidding place, blocking the sun and covering the Graveyard in a perpetual gloom. A chill creeps forward to greet your approach.\n\nWith a feeling of deep dread, you enter the eerie necropolis.\n");
+        chapter = 284; break;
+	case 103:
+        System.out.println("The overgrown path leads to a junction where another track branches off towards the east.\n");
+        System.out.println("If you wish to take this path, type 1.");
+        System.out.println("If you would rather continue towards the northeast, type 2.");
+        pickNumber(2);
+        switch(choose) {
+          case 1: chapter = 13; break;
+          case 2: chapter = 287; break;
+        }
+        break;
+	case 104:
+        System.out.println("The walls are dank and slimy. The stale air chokes you and cobwebs brush across your face. You can feel panic grip your stomach, as the tunnel gets darker and darker.\n\nYou reach a junction where the tunnel meets a corridor leading from north to south.\n");
+        System.out.println("If you wish to turn north, type 1.");
+        System.out.println("If you wish to go south, type 2.");
+        pickNumber(2);
+        switch(choose) {
+          case 1: chapter = 26; break;
+          case 2: chapter = 100; break;
+        }
+        break;
+	case 105:
+        System.out.println("In the distance, perched on the branch of an old oak tree is a jet-black raven.\n");
+        if(checkDiscipline("Animal Kinship")) {
+			System.out.println("If you wish to use your Kai Discipline of Animal Kinship to call to this bird, type 1.");
+			System.out.println("If you do not wish to use it, type 2.");
+			pickNumber(2);
+			switch(choose) {
+			  case 1: chapter = 298; break;
+			  case 2: chapter = 335; break;
+			}
+		}
+		else chapter = 335;
+        break;
+	case 106:
+        System.out.println("Eventually you come to the edge of a fast-flowing icy stream. The white water cascades over the mossy rocks and disappears towards the east.\n");
+        System.out.println("If you wish to follow the stream to the east, type 1.");
+        System.out.println("If you would rather explore upstream, type 2.");
+        pickNumber(2);
+        switch(choose) {
+          case 1: chapter = 263; break;
+          case 2: chapter = 334; break;
+        }
+        break;
+	case 107:
+        System.out.println("Running across the room, you lash out at the skulls, smashing them to fragments. You notice that inside each skull is a bubbling grey jelly that seems to writhe and change its shape, sprouting bat-like wings and suckers from its glistening form. In horror and loathing, you race for the exit corridor and escape just as a heavy portcullis falls with a crash, completely sealing off the chamber.\n");
+        chapter = 23; break;
+	case 108:
+        System.out.println("You fly in an arc through the air towards the opposite roof. Everything seems to be happening in slow motion. You see the teeming crowds below in the street, and a nest of callysparrows in the eaves of a roof to your right. You hear their startled cries as you land with a crash on the other side. But it is the last sound that you will ever hear. The tiles splinter and collapse and you fall through the four floors of the 'Green Slipper Inn' breaking your back in several places.\n\nYour mission and your life end here.\n");
+        ded();
+        break;
+	case 109:
+        System.out.println("The only thing under the carpet is dirt!\n");
+        System.out.println("If you wish to take a closer look at the bottles, type 1.");
+        System.out.println("Or if you wish to leave the room and investigate the stable, type 2.");
+        pickNumber(2);
+        switch(choose) {
+          case 1: chapter = 164; break;
+          case 2: chapter = 308; break;
+        }
         break;
     case 110:
         System.out.println("You quickly take aim and hurl the rock at the Giak's head as hard as you can, but to your horror the creature ducks and the rock arcs harmlessly over its back. You must act immediately to save the wizard.\n");
-        chapter = 55;
-        break;
+        chapter = 55; break;
     case 112:
         System.out.println("Suddenly, the large rock you are hiding behind is rolled aside and you are faced by two snarling Giaks intent on your death. The cave mouth is a narrow entrance and you can only fight the Giaks one at a time.\n");
         fight("Giak",13,10,0,0,112);
@@ -1073,9 +1096,9 @@ class FlightFromTheDark {
    			System.out.println("If you wish to explore the cave further, type 1.");
         System.out.println("Or if you wish leave and descend the hill, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 33;
-          case 2: chapter = 248;
+        switch(choose) {
+          case 1: chapter = 33; break;
+          case 2: chapter = 248; break;
         }
         break;
     case 119:
@@ -1083,21 +1106,21 @@ class FlightFromTheDark {
         System.out.println("If you wish to slide down the slope as carefully as you can, type 1.");
         System.out.println("If you do not feel that you are up to the risk of this tricky descent in your present sleepy state, walk around the edge of the ridge, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 226;
-          case 2: chapter = 38;
+        switch(choose) {
+          case 1: chapter = 226; break;
+          case 2: chapter = 38; break;
         }
         break;
     case 124:
         System.out.println("Inside the box you find 15 Gold Crowns and a Silver Key.\n");
-    		Crowns = Crowns+15;
-    		SpecialItems.add("Silver Key");
+    		crowns = crowns+15;
+    		specialItems.add("Silver Key");
         System.out.println("If you wish to continue to investigate the tunnel, type 1.");
         System.out.println("If you wish to leave and descend the hill, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 211;
-          case 2: chapter = 106;
+        switch(choose) {
+          case 1: chapter = 211; break;
+          case 2: chapter = 106; break;
         }
         break;
     case 125:
@@ -1109,10 +1132,10 @@ class FlightFromTheDark {
           pickNumber(3);
         }
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 27;
-          case 2: chapter = 214;
-          case 3: chapter = 301;
+        switch(choose) {
+          case 1: chapter = 27; break;
+          case 2: chapter = 214; break;
+          case 3: chapter = 301; break;
         }
         break;
     case 131:
@@ -1122,11 +1145,11 @@ class FlightFromTheDark {
     		System.out.println("If you wish to pick up a chunk of temple marble and throw it at the Giak's head, type 3.");
     		System.out.println("Or if you would rather turn and leave the battle area and run back into the woods, type 4.");
         pickNumber(4);
-        switch(Choose) {
-          case 1: chapter = 241;
-          case 2: chapter = 55;
-          case 3: chapter = 302;
-          case 4: chapter = 101;
+        switch(choose) {
+          case 1: chapter = 241; break;
+          case 2: chapter = 55; break;
+          case 3: chapter = 302; break;
+          case 4: chapter = 101; break;
         }
         break;
     case 134:
@@ -1134,23 +1157,21 @@ class FlightFromTheDark {
         System.out.println("Forewarned by this knowledge, if you decide to investigate the huts, type 1.");
         System.out.println("If you would rather avoid the clearing, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 305;
-          case 2: chapter = 40;
+        switch(choose) {
+          case 1: chapter = 305; break;
+          case 2: chapter = 40; break;
         }
         break;
     case 136:
         System.out.println("The Giaks get nearer and then crouch down as if preparing themselves to pounce. You can see the sharp serrated points of their spears and hear their low guttural speech. The larger of the two creatures screams, 'Orgadak taag! Nogjat aga ok!' and attacks you.\n\nYou must fight each of the Giaks in turn. Add 1 point to your COMBAT SKILL during this fight, as you have the advantage of the higher ground in your favour.\n");
         fight("Giak",13,10,0,0,136);
    			fight("Giak",12,10,0,0,136);
-        chapter = 313;
-        break;
+        chapter = 313; break;
     case 138:
         System.out.println("You prepare your weapon and advance to meet the enemy. There are two Mountain Giaks and you must fight them one at a time.\n");
         fight("Giak",13,10,0,0,138);
     		fight("Giak",12,10,0,0,138);
-    		chapter = 291;
-        break;
+    		chapter = 291; break;
     case 140:
         System.out.println("You are in a clearing where several trees have been cut down to make a rickety watchtower. Below the tower are three paths leading off in different directions.\n");
         System.out.println("If you take the south path, type 1.");
@@ -1158,11 +1179,11 @@ class FlightFromTheDark {
     		System.out.println("If you take the southwest path, type 3.");
     		System.out.println("If you decide to climb the watchtower, type 4.");
         pickNumber(4);
-        switch(Choose) {
-          case 1: chapter = 14;
-          case 2: chapter = 252;
-          case 3: chapter = 215;
-          case 4: chapter = 36;
+        switch(choose) {
+          case 1: chapter = 14; break;
+          case 2: chapter = 252; break;
+          case 3: chapter = 215; break;
+          case 4: chapter = 36; break;
         }
         break;
     case 141:
@@ -1170,37 +1191,35 @@ class FlightFromTheDark {
         System.out.println("If you wish to head south, type 1.");
         System.out.println("Or if you wish to cut through the heavier foliage towards the northeas, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 56;
-          case 2: chapter = 333;
+        switch(choose) {
+          case 1: chapter = 56; break;
+          case 2: chapter = 333; break;
         }
         break;
     case 155:
         System.out.println("As you approach, the group of people stop talking. You can see by their expressions that they recognize your green Kai cloak. Slowly, one of the men extends his hand in friendship and says, 'My Lord, we had heard a rumour that the Kai were destroyed. Heaven be praised that it is not so. We feared all was lost.'\n\nYou do not tell them of the destruction of the monastery, for they are refugees from Toran and have lost everything they owned. Their only hope now is that the Kai Lords will lead an army to victory. You learn that the northern port was attacked from both air and sea, and that the forces of the Darklords far outnumbered the King's brave garrison. You reassure them that Sommerlund will not fall and wish them luck on their journey ahead.\n");
-        chapter = 70;
-        break;
+        chapter = 70; break;
     case 176:
         System.out.println("You hide behind some thick bushes so that the Doomwolf and its rider will not see your white horse. Luckily it works-the beast lopes past and vanishes down the track that you have just come along.\n");
         System.out.println("If you wish to attack the remaining Doomwolves and their riders, type 1.");
         System.out.println("If you wish to press on deeper into the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 253;
-          case 2: chapter = 126;
+        switch(choose) {
+          case 1: chapter = 253; break;
+          case 2: chapter = 126; break;
         }
         break;
     case 186:
         System.out.println("The Kakarmi disappear into the dense undergrowth and you soon find yourself lost. After nearly two hours of walking you hear the sound of running water. You decide to investigate a little closer.\n");
-        chapter = 106;
-        break;
+        chapter = 106; break;
     case 187:
         System.out.println("Two furry faces appear over the top of the trunk. Both pairs of eyes stare at your weapon and the two creatures let out a shriek of fright. Leaping from the trunk, they disappear into the forest.\n");
         System.out.println("If you wish to follow them, type 1.");
         System.out.println("If you wish to let them go and continue, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 186;
-          case 2: chapter = 228;
+        switch(choose) {
+          case 1: chapter = 186; break;
+          case 2: chapter = 228; break;
         }
         break;
     case 195:
@@ -1208,23 +1227,22 @@ class FlightFromTheDark {
         System.out.println("If you wish to investigate this cave further, type 1.");
         System.out.println("If you wish to press on, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 59;
-          case 2: chapter = 106;
+        switch(choose) {
+          case 1: chapter = 59; break;
+          case 2: chapter = 106; break;
         }
         break;
     case 214:
         System.out.println("The path gradually narrows until it disappears completely into a mass of dense vegetation. You cannot go any further on this route and therefore you must return to the clearing.\n\nYou should take the south path.\n");
-        chapter = 125;
-        break;
+        chapter = 125; break;
     case 215:
         System.out.println("You emerge into a small clearing. In the centre you see the skeletal remains of a large animal. To the south a narrow track leads off into the distance.\n");
         System.out.println("If you wish to examine the skeleton, type 1.");
         System.out.println("If you would rather press on, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 346;
-          case 2: chapter = 14;
+        switch(choose) {
+          case 1: chapter = 346; break;
+          case 2: chapter = 14; break;
         }
         break;
     case 222:
@@ -1236,10 +1254,10 @@ class FlightFromTheDark {
           pickNumber(3);
         }
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 252;
-          case 2: chapter = 140;
-          case 3: chapter = 67;
+        switch(choose) {
+          case 1: chapter = 252; break;
+          case 2: chapter = 140; break;
+          case 3: chapter = 67; break;
         }
         break;
     case 225:
@@ -1247,9 +1265,9 @@ class FlightFromTheDark {
         System.out.println("If you say 'Do not be afraid, I am a friend,', type 1.");
         System.out.println("If you say 'I am a Kai Lord. I wish you no harm. I must talk with you,', type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 187;
-          case 2: chapter = 39;
+        switch(choose) {
+          case 1: chapter = 187; break;
+          case 2: chapter = 39; break;
         }
         break;
     case 228:
@@ -1257,9 +1275,9 @@ class FlightFromTheDark {
         System.out.println("If you continue east, cutting through the vegetation with your weapon, type 1.");
         System.out.println("If you head south to where the bushes are less dense and then press on through the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 140;
-          case 2: chapter = 215;
+        switch(choose) {
+          case 1: chapter = 140; break;
+          case 2: chapter = 215; break;
         }
         break;
     case 229:
@@ -1268,23 +1286,23 @@ class FlightFromTheDark {
     		System.out.println("If you search the body, type 1.");
         System.out.println("Or if you continue along the east path, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 267;
-          case 2: chapter = 125;
+        switch(choose) {
+          case 1: chapter = 267; break;
+          case 2: chapter = 125; break;
         }
         break;
     case 241:
         System.out.println("The wizard heeds your cry and spins around just in time to loose a searing bolt of energy at the Giak. The creature's head disintegrates in flames and its twitching body falls in a heap at the foot of the pillar. The Giak officer sees you and shouts, 'Ogot.Ogot!' to his cowering troops, who quickly run away from the ruins to the safety of the forest beyond.\n\nThe young wizard wipes his brow, and walks towards you, his hand extended in gratitude and friendship.\n");
-        chapter = 349;
-        break;
+        chapter = 349; break;
+
     case 250:
         System.out.println("Leaping from the top of the trunk, you land in front of two small furry creatures. You recognize that they are Kakarmi, an intelligent race of animals that inhabit and tend the forests of Sommerlund. Before you can apologize for your dramatic entrance, the frightened little creatures scurry off into the forest.\n");
         System.out.println("If you wish to follow them, type 1.");
         System.out.println("If you wish to continue, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 186;
-          case 2: chapter = 228;
+        switch(choose) {
+          case 1: chapter = 186; break;
+          case 2: chapter = 228; break;
         }
         break;
     case 252:
@@ -1292,15 +1310,14 @@ class FlightFromTheDark {
         System.out.println("If you wish to approach them and ask who they are, type 1.");
         System.out.println("If you wish to avoid them and continue onwards on your mission, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 155;
-          case 2: chapter = 70;
+        switch(choose) {
+          case 1: chapter = 155; break;
+          case 2: chapter = 70; break;
         }
         break;
     case 267:
         System.out.println("Covering your nose with your cloak, you cautiously approach the dead beast. The sharp smell of its fetid black blood makes your stomach churn, but you are determined to press on. Then you notice a large saddlebag strapped to its chest. Opening the bag, you find a Message written on an animal skin.Deeper in the bag is a Dagger. You may keep both the Message and the Dagger if you wish.\n\nYou leave the body and continue eastwards along the path.\n");
-        chapter = 125;
-        break;
+        chapter = 125; break;
     case 272:
         System.out.println("Keeping a watchful eye on the sky above, you move quickly along the track. You recall that this route leads to Fogwood, a small cluster of huts that have been used by a family of charcoal burners for nearly fifty years. After twenty minutes you reach the edge of a clearing where the huts are grouped in a small circle. There is no sign of the usual mist of wood smoke which gives Fogwood its apt name, and the huts are unusually quiet.\n");
         System.out.println("To prepare your weapon and stealthily approach the huts, type 1.");
@@ -1309,21 +1326,21 @@ class FlightFromTheDark {
           pickNumber(2);  
         }
 				else pickNumber(1);
-        switch(Choose) {
-          case 1: chapter = 305;
-          case 2: chapter = 134;
+        switch(choose) {
+          case 1: chapter = 305; break;
+          case 2: chapter = 134; break;
         }
         break;
     case 275:
         System.out.println("You have followed this twisting track for about twenty minutes when you hear the beating of wings high above the trees. Looking up you see a large Kraan approaching from the north, its huge black wings casting a gigantic shadow on the trees below.\n\nOn its back are two creatures armed with long spears. They are Mountain Giaks-small ugly creatures full of hatred and malice. Many centuries ago, their ancestors were used by the Darklords to build the infernal city of Helgedad, which lies in the volcanic wastelands beyond the Durncrag mountain range. The construction of the city was long and torturous, and only the strongest of the creatures survived the heat and poisonous atmosphere of Helgedad.\n\nQuickly you dive for the shelter of a large fern tree as the Kraan passes overhead. With heart pounding, you pray that your quick reactions have saved you from being spotted.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 4) chapter = 345;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 4) chapter = 345;
         else chapter = 74;
         break;
     case 279:
         System.out.println("You clamber over the loose rocks and into the mouth of the cave, and then quickly turn to push a large rock over the entrance.\n\nAfter a few minutes you see the Giaks on the rocky ledge outside, their evil yellow eyes furtively searching every crevice of the hillside. They are so close that you feel sure that they must spot you any second now.\n");
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 6) chapter = 112;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 6) chapter = 112;
         else chapter = 96;
         break;
     case 281:
@@ -1331,77 +1348,67 @@ class FlightFromTheDark {
         System.out.println("If you break cover and climb up the hill, type 1.");
         System.out.println("If you change direction and continue your run through the forest, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 311;
-          case 2: chapter = 77;
+        switch(choose) {
+          case 1: chapter = 311; break;
+          case 2: chapter = 77; break;
         }
         break;
     case 285:
         System.out.println("With a sickening thud, the chunk of marble cracks open the back of the Giak's head. The creature drops to its knees and slowly falls forward, down to the ruins below. Elated by your skill, you race forward to aid the young wizard.\n");
-        chapter = 325;
-        break;
+        chapter = 325; break;
 		case 290:
         System.out.println("Inside the long box is a Quarterstaff wrapped in leather. You may take this Weapon if you wish. You close the box and descend the ladder to the clearing below, taking care to use only the sound rungs.\n");
-        if(Weapons[0] == null || Weapons[1] == null) {
+        if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the quarterstaff? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Quarterstaff";
-            else Weapons[1] = "Quarterstaff";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Quarterstaff";
+            else weapons[1] = "Quarterstaff";
           }
         }
     		else System.out.println("You can't wield any more weapons.");
-    		chapter = 140;
-        break;
+    		chapter = 140; break;
     case 291:
-        System.out.println("The two Giaks lie at your feet, their bodies twisted and lifeless. A quick search reveals 6 Gold Crowns, 2 Spears, and a Dagger.\n\nYou may keep the Gold and take either the Dagger or a Spear. Remember to mark this on your Action Chart.\n\nThe Kraan flew off during your battle, and the track is now deserted. You adjust your Backpack and continue your mission.\n");
-        Crowns = Crowns + 6;
-    		if(Weapons[0] == null || Weapons[1] == null) {
+        System.out.println("The two Giaks lie at your feet, their bodies twisted and lifeless. A quick search reveals 6 Gold Crowns, 2 Spears, and a Dagger.\n\nYou may keep the Gold and take either the Dagger or a Spear.\n\nThe Kraan flew off during your battle, and the track is now deserted. You adjust your Backpack and continue your mission.\n");
+        crowns = crowns + 6;
+    		if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the dagger? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Dagger";
-            else Weapons[1] = "Dagger";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Dagger";
+            else weapons[1] = "Dagger";
           }
         }
     		else System.out.println("You can't wield any more weapons.");
-    		if(Weapons[0] == null || Weapons[1] == null) {
+    		if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the spear? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Spear";
-            else Weapons[1] = "Spear";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Spear";
+            else weapons[1] = "Spear";
           }
         }
     		else System.out.println("You can't wield any more weapons.");
-   		  if(Weapons[0] == null || Weapons[1] == null) {
+   		  if(weapons[0] == null || weapons[1] == null) {
           System.out.println("Do you want to take the spear? Y/N");
-          Scanner sc = new Scanner (System.in);
-          String YesNo = sc.next();
-          if(YesNo == "Y") {
-            if(Weapons[0] == null) Weapons[0] = "Spear";
-            else Weapons[1] = "Spear";
+          what = getYesNoAnswer();
+          if(what) {
+            if(weapons[0] == null) weapons[0] = "Spear";
+            else weapons[1] = "Spear";
           }
         }
     		else System.out.println("You can't wield any more weapons.");
-        chapter = 272; 
-        break;
+        chapter = 272; break; 
     case 293:
         System.out.println("With a wave of his hand, Banedon leaves the ruins and you continue your mission, pushing on through the thick woods ahead. You have not gone far when you realize several pairs of yellow eyes are watching you from the undergrowth to your left. Suddenly, a black arrow skims the top of your head. It is a Giak ambush and you must run as fast as you can to escape it.\n");
-        chapter = 281;
-        break;
+        chapter = 281; break;
     case 301:
         System.out.println("Your Kai Discipline reveals that the west path is a dead end.\n");
-        chapter = 27;
-        break;
+        chapter = 27; break;
     case 302:
-        Roll = (int)(Math.random() * 9) + 0;
-        if(Roll <= 2) chapter = 110;
-        else chapter = 285;
-        break;
+        roll = (int)(Math.random() * 9) + 0;
+        if(roll <= 2) chapter = 110;
+        else chapter = 285; break;
     case 311:
         System.out.println("The hillside is steep and the earth is loose and slippery. You chance a swift glance over your shoulder and see the two Giaks emerge from the woods. They start to climb after you. About halfway from the peak of the hill, you spot a cave to your right, almost totally hidden by a landslide.\n");
         System.out.println("If you wish to hide in the cave, type 1.");
@@ -1411,25 +1418,24 @@ class FlightFromTheDark {
           pickNumber(3);
         }
         else pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 279;
-          case 2: chapter = 47;
-          case 3: chapter = 324;
+        switch(choose) {
+          case 1: chapter = 279; break;
+          case 2: chapter = 47; break;
+          case 3: chapter = 324; break;
         }
         break;
     case 313:
         System.out.println("Wiping the foul Giak blood from your weapon, you quickly descend the hillside before the Kraan spots its dead riders. Many times you lose your footing on the loose rocks, falling several feet.\n\nDeduct 1 ENDURANCE point for cuts and bruises to your legs.\n");
         Endurance--;
-    		chapter = 248;
-        break;
+    		chapter = 248; break;
     case 323:
         System.out.println("From the top of the tower you can see above the trees in all directions. Far to the north, a column of jet-black smoke rises high into the sky. Small orange tongues of flame flicker at its base. Your heart sinks as you realize that the port of Toran is ablaze. From the southwest, the wind carries the noise of battle. It is close; no more than five miles at most.On the floor of the watchtower is a large oblong box.\n");
         System.out.println("If you wish to open this box, type 1.");
         System.out.println("If you would prefer to descend the ladder and leave the tower, taking care to use only the good rungs, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 290;
-          case 2: chapter = 140;
+        switch(choose) {
+          case 1: chapter = 290; break;
+          case 2: chapter = 140; break;
         }
         break;
     case 324:
@@ -1437,36 +1443,34 @@ class FlightFromTheDark {
         System.out.println("If you wish to explore the cave, type 1.");
         System.out.println("If you wish to leave and descend the hill in case the Giaks return, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 33;
-          case 2: chapter = 248;
+        switch(choose) {
+          case 1: chapter = 33; break;
+          case 2: chapter = 248; break;
         }
         break;
     case 325:
         System.out.println("Upon seeing you emerge from the woods, the Giak officer shouts 'Ogot! Ogot!' to his cowering troops, who flee the ruins and run to the safety of the forest.\n\nShaking his mailed fist at you, the black-clad Giak screams, 'RANEG ROGAG OK-ORGADAKA OKAK ROGAG GAJ!' before leaving. Surveying the scene of battle, you count over fifteen Giak dead lying among the broken pillars of Raumas.\n\nThe young wizard wipes his brow and walks towards you, his hand extended in friendship.\n");
-        chapter = 349;
-        break;
+        chapter = 349; break;
     case 333:
         System.out.println("You have cut your way through the thick undergrowth for nearly half an hour when you hear the beat of wings high above the trees. Looking up you can just make out the shape of a Kraan approaching from the north. It is one of the monsters that attacked the monastery and on its back are two grey-skinned creatures armed with long spears.\n\nThese are Mountain Giaks-evil servants of the Darklords, full of hatred and malice. Many centuries ago, their ancestors were used by the Darklords to build the infernal city of Helgedad, which lies in the volcanic wastelands beyond the Durncrag range of mountains. The construction of the city was long and torturous and only the strongest of the Giaks survived the heat and poisonous atmosphere of Helgedad.\n\nHidden by the trees, you freeze, keeping absolutely still as the Kraan passes overhead and disappears towards the south. When you are sure that it has gone, you move off once again into the forest.\n");
-        chapter = 131;
-        break;
+        chapter = 131; break;
     case 345:
         System.out.println("You pull up the hood of your green Kai cloak and hold your breath as the Kraan circles above. After a few minutes, you hear the frantic curses of the Giaks. The beating of Kraan wings fades, as they disappear towards the west. Your quick reactions have saved you from capture and likely death.\n");
         System.out.println("You can now return to the track, type 1.");
         System.out.println("Or push on under cover of the trees, type 2.");
         pickNumber(2);
-        switch(Choose) {
-          case 1: chapter = 272;
-          case 2: chapter = 19;
+        switch(choose) {
+          case 1: chapter = 272; break;
+          case 2: chapter = 19; break;
         }
         break;
     case 346:
         System.out.println("Lodged deep in the rib cage of the skeleton is a Spear. It is in good condition and you may take it if you wish and are able to.\n");
-        chapter = 14;
-        break;
+        chapter = 14; break;
     case 349:
-        System.out.println("He is a young blond-haired youth with deep brooding eyes. His face is lined with exhaustion and the grime of battle, and his long sky-blue robes bear evidence of living rough in the wilds. He shakes your hand and bows. 'My eternal thanks, Kai Lord. My powers are nearly drained. Had you not come to my aid, I fear I would have ended my days atop a Giak lance.'\n\nHe is weak and unsteady on his feet. You take his arm and sit him down upon a fallen pillar where you listen intently to what he has to say.\n\n'My name is Banedon. I am journeyman to the Brotherhood of the Crystal Star, which is the Magicians' Guild of Toran. My Guildmaster has sent me to your monastery with this urgent message.' He removes a vellum envelope from inside his robes and hands it to you.\n\n'As you see, I have opened the letter and read its contents. When the war started, I was on the highway with two travelling companions. The Kraan attacked us and we lost each other in the forest during our escape.'\n\nThe letter is a warning to the Kai Lords that the Darklords have mustered a vast army beyond the Durncrag Range. The Guildmaster urges the Kai to cancel the celebrations of Fehmarn and prepare for war.\n\n'I fear we were betrayed,' says Banedon, his head bowed in sorrow.\n\n'One of my order, a brother called Vonotar, had explored the forbidden mysteries of the Black Art. Ten days ago he denounced the Brotherhood and killed one of our Elders. He has since disappeared. It is rumoured that he now aids the Darklords.'\n\nYou tell Banedon what has happened at the monastery, and of your mission to warn the King. Silently, he removes a gold chain from around his neck and hands it to you. On the chain is a small Crystal Star Pendant. 'It is the symbol of my Brotherhood, and we are both truly brothers in this hour of darkness. It is a talisman of good fortune-may it protect you on your road ahead.'\n\nYou thank him, place the chain around your neck, and slip the Crystal Star4 inside your shirt. (Remember to mark this on your Action Chart.)\n\nBanedon bids you farewell. 'We must leave this place lest the Giaks return with more of their loathsome kind to put an end to us. I must return to my Guild. I bid you farewell, my brother. May the luck of the gods go with you.'\n");
-        chapter = 293;
+        System.out.println("He is a young blond-haired youth with deep brooding eyes. His face is lined with exhaustion and the grime of battle, and his long sky-blue robes bear evidence of living rough in the wilds. He shakes your hand and bows. 'My eternal thanks, Kai Lord. My powers are nearly drained. Had you not come to my aid, I fear I would have ended my days atop a Giak lance.'\n\nHe is weak and unsteady on his feet. You take his arm and sit him down upon a fallen pillar where you listen intently to what he has to say.\n\n'My name is Banedon. I am journeyman to the Brotherhood of the Crystal Star, which is the Magicians' Guild of Toran. My Guildmaster has sent me to your monastery with this urgent message.' He removes a vellum envelope from inside his robes and hands it to you.\n\n'As you see, I have opened the letter and read its contents. When the war started, I was on the highway with two travelling companions. The Kraan attacked us and we lost each other in the forest during our escape.'\n\nThe letter is a warning to the Kai Lords that the Darklords have mustered a vast army beyond the Durncrag Range. The Guildmaster urges the Kai to cancel the celebrations of Fehmarn and prepare for war.\n\n'I fear we were betrayed,' says Banedon, his head bowed in sorrow.\n\n'One of my order, a brother called Vonotar, had explored the forbidden mysteries of the Black Art. Ten days ago he denounced the Brotherhood and killed one of our Elders. He has since disappeared. It is rumoured that he now aids the Darklords.'\n\nYou tell Banedon what has happened at the monastery, and of your mission to warn the King. Silently, he removes a gold chain from around his neck and hands it to you. On the chain is a small Crystal Star Pendant. 'It is the symbol of my Brotherhood, and we are both truly brothers in this hour of darkness. It is a talisman of good fortune-may it protect you on your road ahead.'\n\nYou thank him, place the chain around your neck, and slip the Crystal Star4 inside your shirt.\n\nBanedon bids you farewell. 'We must leave this place lest the Giaks return with more of their loathsome kind to put an end to us. I must return to my Guild. I bid you farewell, my brother. May the luck of the gods go with you.'\n");
+        specialItems.add("Crystal Star");
+		chapter = 293;
         break;
 	default:
 		System.out.println("Part mising");
@@ -1476,8 +1480,8 @@ class FlightFromTheDark {
   public static boolean checkDiscipline(String search) {
     String disSearch = search;
     boolean found = false;
-    for(int i = 0; i < NumDisciplines; i++) {
-      if(Disciplines[i] == disSearch) found = true;
+    for(int i = 0; i < numDisciplines; i++) {
+      if(disciplines[i] == disSearch) found = true;
     }
     return found;
   }
@@ -1491,21 +1495,20 @@ class FlightFromTheDark {
     int j = 1;
     System.out.println("You are fighting against "+crName+".");
     System.out.println("What weapon will you use to fight?");
-    if(Weapons[0] != null) System.out.println("If you want to use " + Weapons[0] + ", type "+j+".");
-    else if(Weapons[1] != null) System.out.println("If you want to use " + Weapons[1] + ", type "+j+".");
+    if(weapons[0] != null) System.out.println("If you want to use " + weapons[0] + ", type "+j+".");
+    else if(weapons[1] != null) System.out.println("If you want to use " + weapons[1] + ", type "+j+".");
     else {
       System.out.println("You don't have a weapon to fight with. You lose.");
       ded();
     }
     int x = 0;
-    CombatSkill = CombatSkill - crScary;
-    int CombatRatio = CombatSkill - crCombatSkill;
-    for(int round = 1; Endurance >= 0 || crEndurance >= 0; round++){
+    combatSkill = combatSkill - crScary;
+    int CombatRatio = combatSkill - crCombatSkill;
+    for(int round = 1; Endurance > 0 || crEndurance > 0; round++){
       if(round >= evadePossible && evadePossible != 0) {
         System.out.println("Do you want to run away? Y/N");
-        Scanner sc = new Scanner (System.in);
-        String YesNo = sc.next();
-        if(YesNo == "Y") {
+        what = getYesNoAnswer();
+        if(what) {
         	chapter = evadeChapter;
         }
       }
@@ -1524,15 +1527,17 @@ class FlightFromTheDark {
         else if(CombatRatio <= 9) x = 11;
         else x = 12;
         
-        Roll = (int)(Math.random() * 9) + 0;
-        if(CombatRatio <= 0) {
-          crEndurance = crEndurance - crDamage[Roll][x];
-          Endurance = Endurance - lwDamage[Roll][x];
-        }
+        roll = (int)(Math.random() * 9) + 0;
+        crEndurance = crEndurance - crDamage[roll][x];
+		System.out.println("You dealt "+crDamage[roll][x]+" to "+crName+".");
+        Endurance = Endurance - lwDamage[roll][x];
+		System.out.println("You were dealt "+lwDamage[roll][x]+" to "+crName+".");
+		if(Endurance <= 0) ded();
+		if(crEndurance <= 0) System.out.println("You have defeated "+crName+".");
       }
       
   	}
-    }
+  }
     
   public static void ded() {
     System.out.println("You have died.");
